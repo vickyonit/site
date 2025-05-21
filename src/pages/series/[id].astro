@@ -1,0 +1,65 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import BackToPrev from "@components/BackToPrev.astro";
+
+export async function getStaticPaths() {
+  const seriesEntries = await getCollection("series");
+  return seriesEntries.map((series) => ({
+    params: { id: series.id }, // Use series.id for the slug
+    props: { series }, // Pass the full series entry as a prop
+  }));
+}
+
+interface Props {
+  series: CollectionEntry<"series">;
+}
+
+const { series } = Astro.props;
+
+// Fetch all blog posts and filter/sort them for this series
+const allPosts = await getCollection("blog");
+const seriesPosts = allPosts
+  .filter(post => !post.data.draft && post.data.seriesId === series.id)
+  .sort((a, b) => {
+    const orderA = a.data.seriesOrder ?? Infinity;
+    const orderB = b.data.seriesOrder ?? Infinity;
+    if (orderA === orderB) {
+      // If order is the same, or both are Infinity, sort by date
+      return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+    }
+    return orderA - orderB;
+  });
+---
+
+<PageLayout title={series.data.title} description={series.data.description}>
+  <Container>
+    <div class="animate">
+      <BackToPrev href="/series">
+        Back to all series
+      </BackToPrev>
+    </div>
+
+    <div class="my-10 space-y-4">
+      <h1 class="animate text-3xl font-bold text-black dark:text-white">{series.data.title}</h1>
+      <p class="animate text-lg text-gray-700 dark:text-gray-300">{series.data.description}</p>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="animate text-2xl font-semibold text-black dark:text-white">Posts in this series:</h2>
+      {seriesPosts.length > 0 ? (
+        <ul class="animate flex flex-col gap-4">
+          {seriesPosts.map((post) => (
+            <li>
+              <ArrowCard entry={post} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="animate text-gray-700 dark:text-gray-300">No posts in this series yet. If you've added posts, ensure they have the correct 'seriesId' and are not marked as 'draft'.</p>
+      )}
+    </div>
+  </Container>
+</PageLayout>

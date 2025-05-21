@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+
+// Fetch all series, sort by order, then by title
+const seriesEntries = (await getCollection("series")).sort((a, b) => {
+  const orderA = a.data.order ?? Infinity;
+  const orderB = b.data.order ?? Infinity;
+  if (orderA !== orderB) {
+    return orderA - orderB;
+  }
+  return a.data.title.localeCompare(b.data.title);
+});
+---
+
+<PageLayout title="Blog Series" description="Browse blog post series.">
+  <Container>
+    <div class="space-y-10">
+      <div class="animate text-2xl font-bold text-black dark:text-white">
+        Blog Series
+      </div>
+      <div class="space-y-4">
+        <section class="animate space-y-4">
+          <div>
+            <ul class="flex flex-col gap-4">
+              {
+                seriesEntries.map((seriesItem) => (
+                  <li>
+                    <ArrowCard entry={{ slug: `series/${seriesItem.id}`, data: seriesItem.data }} />
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </Container>
+</PageLayout>

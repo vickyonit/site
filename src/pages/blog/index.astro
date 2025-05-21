@@ -4,17 +4,36 @@ import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import { BLOG } from "@consts";
+// getEntry is not strictly needed if we fetch all series once with getCollection
+// import { type CollectionEntry, getCollection, getEntry } from "astro:content"; 
 
-const data = (await getCollection("blog"))
+const allPostsData = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  
+
+// Fetch all series to create a lookup map
+const seriesEntries = await getCollection("series");
+const seriesTitleMap = new Map(seriesEntries.map(s => [s.id, s.data.title]));
+
+// Enhance posts with series title
+const postsWithSeriesInfo = allPostsData.map(post => {
+  let seriesTitle = null;
+  if (post.data.seriesId && seriesTitleMap.has(post.data.seriesId)) {
+    seriesTitle = seriesTitleMap.get(post.data.seriesId);
+  }
+  return { ...post, seriesTitle }; // Add seriesTitle to the post object
+});
+
+// Now, group postsWithSeriesInfo by year
+// The post type now includes an optional seriesTitle at the top level
+type PostWithSeriesTitle = CollectionEntry<"blog"> & { seriesTitle?: string | null };
+
 type Acc = {
-  [year: string]: CollectionEntry<"blog">[];
+  [year: string]: PostWithSeriesTitle[];
 }
 
-const posts = data.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
+const postsByYear = postsWithSeriesInfo.reduce((acc: Acc, post) => {
+    const year = post.data.date.getFullYear().toString(); // post.data.date should be correct here
     if (!acc[year]) {
       acc[year] = [];
     }
@@ -22,7 +41,7 @@ const posts = data.reduce((acc: Acc, post) => {
     return acc;
   }, {});
 
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a)); 
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
@@ -40,9 +59,14 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
             <div>
               <ul class="flex flex-col gap-4">
                 {
-                  posts[year].map((post) => (
+                  postsByYear[year].map((post) => ( // Use postsByYear here
                     <li>
-                      <ArrowCard entry={post}/>
+                      <ArrowCard entry={post} />
+                      {post.seriesTitle && (
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          Part of series: <a href={`/series/${post.data.seriesId}`} class="text-blue-600 dark:text-blue-400 hover:underline">{post.seriesTitle}</a>
+                        </div>
+                      )}
                     </li>
                   ))
                 }

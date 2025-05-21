@@ -6,7 +6,9 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    draft: z.boolean().optional()
+    draft: z.boolean().optional(),
+    seriesId: z.string().optional(),
+    seriesOrder: z.number().optional()
   }),
 });
 
@@ -32,4 +34,13 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { blog, work, projects };
+const series = defineCollection({
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    order: z.number().optional(),
+  }),
+});
+
+export const collections = { blog, work, projects, series };

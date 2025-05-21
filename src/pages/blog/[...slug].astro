@@ -19,6 +19,56 @@ type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+// Series data fetching logic
+import { getEntry } from "astro:content"; // getCollection is already imported
+
+let seriesEntry = null;
+let seriesPosts = [];
+let previousPost = null;
+let nextPost = null;
+
+if (post.data.seriesId) {
+  try {
+    // getEntry might return undefined if not found, or throw.
+    // The example uses await getEntry("series", post.data.seriesId)
+    // It's safer to assign directly and check for null/undefined.
+    const entry = await getEntry("series", post.data.seriesId);
+    if (entry) {
+      seriesEntry = entry;
+    } else {
+      console.warn(`Series with id "${post.data.seriesId}" not found for post "${post.slug}".`);
+    }
+  } catch (e) {
+    // Catch if getEntry throws for some reason (e.g. invalid ID format)
+    console.error(`Error fetching series with id "${post.data.seriesId}" for post "${post.slug}":`, e);
+  }
+  
+  if (seriesEntry) {
+    seriesPosts = (await getCollection("blog"))
+      .filter(p => !p.data.draft && p.data.seriesId === post.data.seriesId)
+      .sort((a, b) => {
+        const orderA = a.data.seriesOrder ?? Infinity;
+        const orderB = b.data.seriesOrder ?? Infinity;
+        // If order is the same, or both are Infinity, maintain original sort (date) or add secondary sort if needed
+        if (orderA === orderB) {
+            return new Date(a.data.date).getTime() - new Date(b.data.date).getTime(); // Older first for series posts
+        }
+        return orderA - orderB;
+      });
+    
+    const currentIndex = seriesPosts.findIndex(p => p.slug === post.slug);
+    
+    if (currentIndex !== -1) { // Ensure post is found in series (it should be)
+      if (currentIndex > 0) {
+        previousPost = seriesPosts[currentIndex - 1];
+      }
+      if (currentIndex < seriesPosts.length - 1) {
+        nextPost = seriesPosts[currentIndex + 1];
+      }
+    }
+  }
+}
 ---
 
 <PageLayout title={post.data.title} description={post.data.description}>
@@ -41,9 +91,37 @@ const { Content } = await post.render();
       <div class="animate text-2xl font-semibold text-black dark:text-white">
         {post.data.title}
       </div>
+      <!-- Series Link -->
+      {seriesEntry && (
+        <div class="animate font-base text-sm text-gray-700 dark:text-gray-300">
+          Part of series: <a href={`/series/${seriesEntry.id}`} class="text-blue-600 dark:text-blue-400 hover:underline">{seriesEntry.data.title}</a>
+        </div>
+      )}
     </div>
     <article class="animate">
       <Content />
     </article>
+
+    <!-- Series Navigation -->
+    {seriesEntry && (previousPost || nextPost) && (
+      <nav class="animate mt-10 pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:justify-between gap-4">
+        <div>
+          {previousPost && (
+            <a href={`/blog/${previousPost.slug}`} class="block text-blue-600 dark:text-blue-400 hover:underline text-left">
+              <span class="text-sm text-gray-600 dark:text-gray-400">&laquo; Previous in series:</span>
+              <span class="block font-medium">{previousPost.data.title}</span>
+            </a>
+          )}
+        </div>
+        <div class="sm:text-right">
+          {nextPost && (
+            <a href={`/blog/${nextPost.slug}`} class="block text-blue-600 dark:text-blue-400 hover:underline text-left sm:text-right">
+              <span class="text-sm text-gray-600 dark:text-gray-400">Next in series: &raquo;</span>
+              <span class="block font-medium">{nextPost.data.title}</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    )}
   </Container>
 </PageLayout>
