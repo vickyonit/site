@@ -11,13 +11,13 @@ export const SITE: Site = {
 export const HOME: Metadata = {
   TITLE: "Home",
   DESCRIPTION:
-    "Product founder building WhatsApp AI agents. Writing on handoffs, retries, latency, and trust in conversational systems.",
+    "Co-founder at Peach. Building WhatsApp messaging and Dexy — playbooks, MCP, and agent runtimes that survive production.",
 };
 
 export const BLOG: Metadata = {
   TITLE: "Writing",
   DESCRIPTION:
-    "Notes on shipping AI agents in production — escalation, reliability, latency, memory, and messaging primitives.",
+    "Notes from Peach and Dexy — playbooks, MCP, context budgets, WhatsApp retries, and why the two products stay separate.",
 };
 
 export const WORK: Metadata = {

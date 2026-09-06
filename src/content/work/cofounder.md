@@ -5,6 +5,6 @@ dateStart: "08/18/2018"
 dateEnd: "Current"
 ---
 
-Building Peach — WhatsApp for business growth: messaging, automations, and AI agents that handle real customer conversations.
+Building Peach — WhatsApp business messaging, automations, inbox, pipelines, and production AI agents on Cloud API.
 
-Product focus today: agents that can act (tools), know when to stop (escalation / hybrid / human override), and stay trustworthy under webhook retries, rate limits, and multi-turn context. Previously co-founded Gumstack (embedded video calling) and was a founding member at InterviewPass (async interviews).
+Also building Dexy — multi-tenant agent workspaces with playbooks (typed requires + preflight), dual MCP surfaces, sandbox, and long-running tool loops. Peach and Dexy connect at Streams and MCP; they are not one monolith.
