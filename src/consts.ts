@@ -3,24 +3,26 @@ import type { Site, Metadata, Socials } from "@types";
 export const SITE: Site = {
   NAME: "Vignesh Rajendran",
   EMAIL: "vickyonit@gmail.com",
-  NUM_POSTS_ON_HOMEPAGE: 3,
+  NUM_POSTS_ON_HOMEPAGE: 5,
   NUM_WORKS_ON_HOMEPAGE: 3,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
 };
 
 export const HOME: Metadata = {
   TITLE: "Home",
-  DESCRIPTION: "Home page of all articles, projects and work.",
+  DESCRIPTION:
+    "Co-founder at Peach. Building WhatsApp messaging and Dexy — playbooks, MCP, and agent runtimes that survive production.",
 };
 
 export const BLOG: Metadata = {
-  TITLE: "Blog",
-  DESCRIPTION: "A collection of articles on topics I am passionate about.",
+  TITLE: "Writing",
+  DESCRIPTION:
+    "Notes from Peach and Dexy — playbooks, MCP, context budgets, WhatsApp retries, and why the two products stay separate.",
 };
 
 export const WORK: Metadata = {
   TITLE: "Work",
-  DESCRIPTION: "Where I have worked and what I have done.",
+  DESCRIPTION: "Where I've built products and what I owned.",
 };
 
 export const PROJECTS: Metadata = {
@@ -29,16 +31,16 @@ export const PROJECTS: Metadata = {
 };
 
 export const SOCIALS: Socials = [
-  { 
+  {
     NAME: "twitter-x",
     HREF: "https://twitter.com/vickyonit",
   },
-  { 
+  {
     NAME: "github",
-    HREF: "https://github.com/vickyonit"
+    HREF: "https://github.com/vickyonit",
   },
-  { 
+  {
     NAME: "linkedin",
     HREF: "https://www.linkedin.com/in/vickyonit",
-  }
+  },
 ];
