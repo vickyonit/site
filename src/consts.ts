@@ -4,14 +4,14 @@ export const SITE: Site = {
   NAME: "Vignesh Rajendran",
   EMAIL: "vickyonit@gmail.com",
   NUM_POSTS_ON_HOMEPAGE: 5,
-  NUM_WORKS_ON_HOMEPAGE: 3,
+  NUM_WORKS_ON_HOMEPAGE: 4,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
 };
 
 export const HOME: Metadata = {
   TITLE: "Home",
   DESCRIPTION:
-    "Co-founder at Peach. Building WhatsApp messaging and Dexy — playbooks, MCP, and agent runtimes that survive production.",
+    "Co-founder at Peach. Building Dexy since January 2025 — AI workspaces, playbooks, and MCP agent runtimes.",
 };
 
 export const BLOG: Metadata = {
