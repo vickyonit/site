@@ -1,6 +1,7 @@
 ---
 title: "Running WhatsApp agents for customers: the model we chose and what they use them for"
 description: "Why our agents run on Gemini, and two real deployments: a replaced call centre, and order and product questions."
+featured: 3
 ---
 
 Since mid-2025 we've been building AI agents on top of Peach. This is a plain account of the model we chose and what customers actually did with them.

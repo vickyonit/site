@@ -1,6 +1,7 @@
 ---
 title: "Grading AI agents with an LLM: the bugs that made our scores lie"
 description: "How scheduled conversation audits work, and the rules that keep the scores honest: N/A answers, a JSON false, and a score you can click through."
+featured: 2
 ---
 Using a model to grade conversations is easy to start and hard to trust. The difficult part isn't the prompt; it's making the numbers honest enough that a manager acts on them. We score real customer conversations against rubrics that a manager writes: the model answers each question, we aggregate the answers, and a dashboard shows where quality is breaking. This post covers how it works and the rules we adopted after our scores turned out to be wrong in ways that were easy to miss.
 

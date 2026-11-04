@@ -1,6 +1,7 @@
 ---
 title: "From async interviews to WhatsApp agents: how each product led to the next"
 description: "InterviewPass, Gumstack, Peach. What went wrong with each, and what pointed to the next."
+featured: 4
 ---
 
 I've started four products. Each move came from something I noticed while the previous one wasn't working. This is how they connect.

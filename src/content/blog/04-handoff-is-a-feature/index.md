@@ -1,6 +1,7 @@
 ---
 title: "Handoff is a feature, not a failure: how our agents pass work to people and each other"
 description: "The design behind agent handoff: what context travels, who stays in charge, and how an agent can ask for help without leaving the conversation."
+featured: 1
 ---
 Handoff is where agent systems show their seams. An agent that can't pass work on, to a person or to another agent, either fails customers quietly or pretends to know things it doesn't. This post describes the three kinds of handoff in our system, what context travels with each, and the design decisions that kept them reliable.
 
