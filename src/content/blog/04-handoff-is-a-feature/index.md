@@ -2,6 +2,7 @@
 title: "Handoff is a feature, not a failure: how our agents pass work to people and each other"
 description: "The design behind agent handoff: what context travels, who stays in charge, and how an agent can ask for help without leaving the conversation."
 ---
+Handoff is where agent systems show their seams. An agent that can't pass work on, to a person or to another agent, either fails customers quietly or pretends to know things it doesn't. This post describes the three kinds of handoff in our system, what context travels with each, and the design decisions that kept them reliable.
 
 About 15% of the conversations our agents handle end with a handoff to a person. It's tempting to treat that number as the thing to drive down. The better question isn't "how do we avoid escalation?" but "how do we make escalation good?"
 
@@ -39,14 +40,10 @@ Importantly, a pending question does not mark the conversation as escalated. The
 
 There's a related guard. If the agent starts to stall with phrases like "let me check on that and get back to you" without actually doing anything, the runtime catches it and nudges the agent to call the consultation tool, or to escalate if consultations are turned off. A promise to get back later is a failure mode, because nothing is going to bring the customer back.
 
-## A detail that prevents a nasty bug
+## 4. A detail that prevents a nasty bug
 
 We pin which runtime an agent uses when a session starts, and never change it afterwards. If someone flips a feature flag in the middle of a conversation, that conversation keeps running on the runtime it began with. Flipping behaviour under a live conversation is how you get replies that make no sense.
 
-## Takeaways
+## Summary
 
-- **Treat "who's in charge" as data.** It should live in the database, and the prompt should read it, not own it.
-- **Handoff needs context, not just routing.** A summary and a reason are the difference between a useful handoff and a customer repeating themselves.
-- **Give the agent a way to ask.** Not every gap needs a human to take over.
-
-About 15% of our conversations reach a person. That number isn't a target. It's something to watch.
+Treat "who is in charge of this conversation" as data in the database, not as something the prompt is asked to remember. Pass a summary and a reason with every handoff so the next party doesn't start cold. And give the agent a way to ask for help without giving up the conversation. About 15% of our conversations reach a person; we treat that as a number to watch, not a target.
