@@ -1,9 +1,9 @@
 ---
 title: "71% of my agent conversations end as \"timeout\". That isn't failure."
-description: "How I measure AI agents when most chats just go quiet, and why I stopped reporting a resolution rate."
+description: "How session states work in a WhatsApp agent, why most chats end by going quiet, and what to measure instead of a resolution rate."
 ---
 
-Across roughly 90,000 conversations in a quarter, the final status of our WhatsApp agent conversations looked like this:
+Across roughly 90,000 agent conversations in a quarter, the final status looked like this:
 
 | Status | Conversations | Share |
 | --- | --- | --- |
@@ -13,28 +13,50 @@ Across roughly 90,000 conversations in a quarter, the final status of our WhatsA
 | in progress | 1,711 | 2% |
 | failed | 16 | under 0.1% |
 
-At first glance, 71% looks terrible. It isn't, and the reason says a lot about how to measure agents.
+At first glance, 71% looks terrible. It isn't, and the reason says a lot about how to measure agents on a channel like WhatsApp.
 
-## What "timeout" means
+## A conversation on WhatsApp doesn't end. It stops.
 
-In our system a conversation gets an expiry time. If that time passes while the conversation is still open, it is marked `timeout`. Nothing went wrong. The customer got their answer, or lost interest, or went to lunch, and the chat went quiet.
+On a phone call, the conversation has a clear end. Someone hangs up. On WhatsApp, a customer asks a question, gets an answer, and puts the phone down. There is no goodbye, and nothing in the protocol tells you they're done.
 
-`completed` is different. It only happens when the agent explicitly decides the conversation is done and closes it. Most agents don't do that, because most customers don't say goodbye.
+So every agent conversation in our system is a session with an expiry time. If a session is still open when that time passes, a background job moves it to `timeout`:
 
-So the three big buckets are not success, failure and in-between. Two of them are mostly "the customer stopped replying", and one is "a human was needed".
+```ruby
+def self.end_timedout_sessions
+  ids = Wa::StreamSession.where(expiry_time: ..Time.now, status: :in_progress).pluck(:id)
+  Wa::StreamSession.where(id: ids).update_all(status: :timeout)
+  BotSession.where(context_type: 'Wa::StreamSession', context_id: ids).update_all(status: :closed)
+end
+```
 
-## Why I won't report a resolution rate
+Nothing went wrong in that conversation. The customer got an answer, lost interest, or went to lunch, and the clock ran out.
 
-If I called `completed` a resolution, the rate would be 11%. If I called everything that wasn't escalated a resolution, it would be 84%. Both numbers come from the same data, and neither is true. A customer who stopped replying might be satisfied, or might have given up.
+`completed` is a different thing. It only happens when the agent itself decides the conversation is finished and closes it. Most agents rarely do that, because most customers never say goodbye.
 
-The only number I trust right now is the escalation rate: about 15%. It means one in seven conversations needed a person, which I can defend because a person actually picked it up.
+## So what do the buckets mean?
 
-## What I'm doing about it
+- **timeout** is the default way a conversation ends. It tells you nothing about whether the customer was happy.
+- **completed** means the agent explicitly closed the conversation. It's a small, biased sample.
+- **escalated** means a person was needed, and a person picked it up.
+- **failed** means something broke. At 16 out of about 90,000, it's the one to watch for movement.
 
-Counting statuses is the easy part. Knowing whether the customer got what they came for needs someone, or something, to read the conversation. That is why we score a sample of real conversations against a rubric on a schedule, instead of trusting the status column.
+Two of the three big buckets are mostly "the customer stopped replying". Neither is success or failure.
 
-## One more thing I found
+## Why we don't report a resolution rate
 
-Usage is not evenly spread. Of the 94 accounts with active agents, the top five account for 97% of conversations. Averages across all accounts would have told me a story that isn't real.
+If we called `completed` a resolution, the rate would be 11%. If we called everything that wasn't escalated a resolution, it would be 84%. Both come from the same data. Neither is true, because a customer who stopped replying might be satisfied, or might have given up.
 
-We don't have a clean outcome metric yet.
+The only number we trust from this table is the escalation rate, about 15%, because a human actually took those conversations. It's a lower bound on "the agent wasn't enough", not a measure of "the agent worked".
+
+## What does tell you if an agent is working
+
+Counting statuses is the easy part. To know whether the customer got what they came for, someone has to read the conversation. That's why we built scheduled audits that score a sample of real conversations against a rubric a manager writes, instead of trusting the status column. (How those work is in [another post](/blog/06-grading-agents-with-an-llm).)
+
+A few things to do on any channel without clear endings:
+
+1. **Define the end yourself.** Pick an expiry that fits your customers' pace, and treat the resulting state as "went quiet", not as a verdict.
+2. **Track the states that need a human.** Escalations are the one outcome that's unambiguous.
+3. **Sample and read.** A small number of conversations read carefully beats a large number classified by a status field.
+4. **Watch `failed` and the trend, not the share.** A stable 71% timeout is normal. A jump in failures is not.
+
+We don't have a clean outcome metric yet. What we do have is a clear idea of which numbers not to trust.

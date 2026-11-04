@@ -1,33 +1,66 @@
 ---
 title: "Giving every coding agent its own copy of the app"
-description: "How we run several branches and several AI coding sessions at once without them stepping on each other."
+description: "How we run several branches and several AI coding sessions at once without ports, databases and servers colliding."
 ---
 
-Once a few people, and a few AI coding sessions, work in the same repo at the same time, the problem stops being the code. It's ports, databases and half-started servers.
+Once several people, and several AI coding sessions, work in the same repo at the same time, the hard problem stops being the code. It becomes ports, databases and half-started servers.
 
-## The setup
+## The problem
+
+Say you're reviewing a pull request on `main` while an agent builds a feature on a branch, and another agent fixes a bug on a third. They all want port 3000. They all want the same development database, and one agent's migration breaks the others. A stray background worker from one session processes jobs meant for another.
+
+You can ask people, or agents, to take turns. It doesn't work, because the whole point of an agent is that it runs when you're busy with something else.
+
+## The setup: one island per branch
 
 We have a small command that creates a git worktree for a branch and gives it its own everything:
 
-- its own directory
-- its own app port and asset server port (offset by a slot number from the main checkout)
-- its own Postgres database and test database
-- its own Redis index for jobs and websockets
-- its own generated environment file
+| Resource | Main checkout | Worktree number N |
+| --- | --- | --- |
+| Directory | your usual clone | a sibling folder |
+| App port | 3000 | 3000 + N |
+| Asset server port | 3035 | 3035 + N |
+| Development database | your normal one | a separate one per branch |
+| Test database | your normal one | a separate one per branch |
+| Redis index | the default | N + 1, for jobs and websockets |
+| Environment file | manual | generated |
 
 ```sh
 bin/peach-worktree create feat/my-feature --from origin/main --fetch --start
 bin/peach-worktree teardown feat-my-feature
 ```
 
-A review on `main` and a feature on a branch can both be running right now, and neither can break the other's database. When a branch merges, one command removes the worktrees that are done.
+A review on `main` and a feature on a branch can both be running right now, and neither can break the other's database. When a branch merges, one cleanup command removes every worktree whose branch has landed.
 
 ## The part that took longer: signing in
 
-An agent that drives a browser to check a UI change can't type your password, and it shouldn't have to. We added a development-only endpoint that prints a one-time link which signs the dev server in as a given user and lands on a path. No credentials in the prompt, and it doesn't exist in production.
+An agent that drives a browser to check a UI change can't type your password, and it shouldn't have to. We added a development-only endpoint that prints a one-time link. Opening it signs the dev server in as a given user and lands on a path:
+
+```sh
+bin/dev-sign-in <email> [path] [base_url]
+```
+
+No credentials go into the prompt, and the endpoint doesn't exist in production.
 
 ## Writing for agents, not just people
 
-Our repo has a short, always-loaded guide with the rules that matter most: every query is scoped to the account, never bypass the messaging callbacks, and when a question is about what a user sees, show a screenshot instead of describing it. Longer reference docs for each subsystem are linked from it and loaded only when a task touches that area.
+The repo has a short guide that is always loaded. It holds the few rules that prevent expensive mistakes:
 
-The short file is the important part. A long one gets skimmed by humans and agents alike. The rules that prevent expensive mistakes go in the short file, and everything else goes behind a link.
+- Every query is scoped to the account. Tenants must never see each other's data.
+- Never bypass the messaging callbacks. Sending a message has side effects, and skipping the proper path skips them.
+- When a question is about what a user sees, show a screenshot instead of describing it.
+
+Longer reference docs for each area, such as messaging, automations, pipelines and billing, are linked from that file and are only read when a task touches that area. Small rule files are loaded automatically when you edit files in a subsystem, and point to the deeper doc.
+
+The short file matters most. A long one gets skimmed by people and agents alike. The rules that prevent expensive mistakes go in the short file, and everything else goes behind a link.
+
+## Showing instead of telling
+
+For anything about how a screen looks or behaves, the guide tells agents to run a command that drives the real app with Playwright and returns screenshots, instead of describing the change in words. The reviewer, human or agent, sees the actual screen, and can compare against the previous version.
+
+## Takeaways
+
+- Isolation beats coordination. Don't ask sessions to take turns. Give each one its own world.
+- Remove the need for secrets in the loop. A one-time sign-in link solved a problem that passwords can't.
+- If an agent keeps making the same mistake, the guide is probably missing a rule.
+- Keep the always-loaded file small enough that you'd read it yourself.
