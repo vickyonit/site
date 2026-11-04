@@ -8,13 +8,13 @@ type Context = {
 
 export async function GET(context: Context) {
   const blog = (await getCollection("blog"))
-  .filter(post => !post.data.draft);
+  .filter(post => !post.data.draft && post.data.date);
 
   const projects = (await getCollection("projects"))
     .filter(project => !project.data.draft);
 
   const items = [...blog, ...projects]
-    .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+    .sort((a, b) => new Date(b.data.date!).valueOf() - new Date(a.data.date!).valueOf());
 
   return rss({
     title: HOME.TITLE,

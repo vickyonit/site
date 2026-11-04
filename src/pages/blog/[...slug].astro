@@ -9,7 +9,7 @@ import BackToPrev from "@components/BackToPrev.astro";
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
     .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+    .sort((a, b) => (b.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) - (a.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) || b.slug.localeCompare(a.slug));
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: post,
@@ -30,10 +30,14 @@ const { Content } = await post.render();
     </div>
     <div class="space-y-1 my-10">
       <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
-          <FormattedDate date={post.data.date} />
-        </div>
-        &bull;
+        {post.data.date && (
+          <>
+            <div class="font-base text-sm">
+              <FormattedDate date={post.data.date} />
+            </div>
+            &bull;
+          </>
+        )}
         <div class="font-base text-sm">
           {readingTime(post.body)}
         </div>

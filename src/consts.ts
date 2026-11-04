@@ -4,20 +4,20 @@ export const SITE: Site = {
   NAME: "Vignesh Rajendran",
   EMAIL: "vickyonit@gmail.com",
   NUM_POSTS_ON_HOMEPAGE: 5,
-  NUM_WORKS_ON_HOMEPAGE: 4,
+  NUM_WORKS_ON_HOMEPAGE: 7,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
 };
 
 export const HOME: Metadata = {
   TITLE: "Home",
   DESCRIPTION:
-    "Co-founder at Peach. Building Dexy since January 2025 — AI workspaces, playbooks, and MCP agent runtimes.",
+    "Co-founder at Peach, a WhatsApp business platform with AI agents. Building Dexy, an AI workspace runtime, since January 2025.",
 };
 
 export const BLOG: Metadata = {
   TITLE: "Writing",
   DESCRIPTION:
-    "Notes from Peach and Dexy — playbooks, MCP, context budgets, WhatsApp retries, and why the two products stay separate.",
+    "Notes from running AI agents in production: measuring them honestly, handing off to people, and the systems underneath.",
 };
 
 export const WORK: Metadata = {

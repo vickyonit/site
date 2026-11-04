@@ -9,7 +9,7 @@ import { SITE, HOME, SOCIALS } from "@consts";
 
 const blog = (await getCollection("blog"))
   .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .sort((a, b) => (b.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) - (a.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) || b.slug.localeCompare(a.slug))
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
 const allwork = (await getCollection("work"))
@@ -30,27 +30,31 @@ const work = await Promise.all(
       Vignesh Rajendran
     </h1>
     <p class="animate mt-2 text-black/70 dark:text-white/70">
-      Co-founder at Peach. Building Dexy since January 2025.
+      Co-founder at Peach. Building Dexy since January 2025. Bengaluru.
     </p>
 
     <div class="space-y-16 mt-10">
       <section>
         <article class="space-y-4">
           <p class="animate">
-            I co-founded <Link href="https://trypeach.ai" external>Peach</Link> —
-            WhatsApp for business conversations, automations, and agents that have to survive
-            real Cloud API retries, rate limits, and human handoff.
+            I co-founded <Link href="https://trypeach.ai" external>Peach</Link>, a WhatsApp
+            platform for business conversations, automations and AI agents. It serves
+            16,000+ accounts, and the agents I've built since mid-2025 handle about
+            90,000 conversations a quarter, with a person stepping in when they should.
+            I own the architecture, the infrastructure and the agent runtime.
           </p>
           <p class="animate">
-            In January 2025 I started <strong class="text-black dark:text-white font-semibold">Dexy</strong> —
-            a separate product: AI workspaces, playbooks with typed requires and preflight,
-            MCP in both directions, sandbox, and long agent loops where context size is a
-            production constraint. Peach is the messaging plane; Dexy is the workspace runtime.
-            They meet at Streams and MCP — not as one monolith.
+            In January 2025 I started <strong class="text-black dark:text-white font-semibold">Dexy</strong>,
+            a separate product: an AI workspace runtime with playbooks, MCP in both directions,
+            a sandbox and long agent loops. Peach is the messaging plane and Dexy is the
+            workspace runtime. They meet at Streams and MCP.
           </p>
           <p class="animate">
-            Writing here is notes from those codebases. If it reads like a generic AI essay,
-            I failed.
+            Before that I co-founded Gumstack, a video shopping widget used by retailers like
+            Urban Ladder and Furlenco, and was a founding member of InterviewPass. Earlier I
+            worked on product and growth at Recruiterbox and built web and mobile
+            applications at TCS. Writing here is notes from those codebases. If it reads
+            like a generic AI essay, I failed.
           </p>
         </article>
       </section>
@@ -108,8 +112,7 @@ const work = await Promise.all(
         </h2>
         <article>
           <p>
-            Email or LinkedIn if you want to talk about agents that have to work when
-            connectors lie and webhooks retry.
+            Email or LinkedIn if you want to talk about running AI agents in production.
           </p>
         </article>
         <ul class="flex flex-wrap gap-2">

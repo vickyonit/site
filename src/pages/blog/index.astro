@@ -7,14 +7,16 @@ import { BLOG } from "@consts";
 
 const data = (await getCollection("blog"))
   .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  
+  .sort((a, b) => (b.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) - (a.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) || b.slug.localeCompare(a.slug));
+
+const undated = data.filter(post => !post.data.date);
+
 type Acc = {
   [year: string]: CollectionEntry<"blog">[];
 }
 
-const posts = data.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
+const posts = data.filter(post => post.data.date).reduce((acc: Acc, post) => {
+    const year = post.data.date!.getFullYear().toString();
     if (!acc[year]) {
       acc[year] = [];
     }
@@ -36,6 +38,17 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
           Notes from Peach and Dexy — the systems, not the pitch deck.
         </p>
       </div>
+      {undated.length > 0 && (
+        <section class="animate space-y-4">
+          <ul class="flex flex-col gap-4">
+            {undated.map((post) => (
+              <li>
+                <ArrowCard entry={post}/>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <div class="space-y-4">
         {years.map(year => (
           <section class="animate space-y-4">
