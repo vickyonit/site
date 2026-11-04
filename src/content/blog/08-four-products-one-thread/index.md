@@ -3,15 +3,15 @@ title: "From async interviews to WhatsApp agents: how each product led to the ne
 description: "InterviewPass, Gumstack, Peach. What went wrong with each one, and what pointed me to the next."
 ---
 
-I've started four products. None of the moves was planned. Each one came from something I noticed while the previous one wasn't working.
+I've started four products. Each move came from something I noticed while the previous one wasn't working.
 
 ## InterviewPass: customers wanted a bigger product
 
 InterviewPass was an asynchronous interview experience: a candidate records answers on their own time, and a recruiter reviews them later. It did that well.
 
-The problem was what people expected. They wanted an entire hiring platform, not one step of it. We tried to close the gap by integrating with ATS providers, and we couldn't make that scale. Each integration was its own project, and the product people wanted kept moving further away.
+The problem was what people expected. They wanted an entire hiring platform, not one step of it. We tried to close the gap by integrating with ATS providers, and we couldn't make that scale.
 
-The lesson I took: if customers keep describing a bigger product than the one you built, believe them or narrow who you sell to. Don't quietly bolt on integrations.
+If customers keep describing a bigger product than the one you built, that's a signal.
 
 ## Gumstack: it worked, but only when traffic existed
 
@@ -27,8 +27,8 @@ So we asked: why not help businesses talk to customers there directly?
 
 ## Peach
 
-That's how Peach started. It began as a shared inbox, then grew into broadcasts, then automations, then AI agents. I don't think I could have designed that path in advance. Each step came from a customer asking for the next thing.
+That's how Peach started. It began as a shared inbox, then grew into broadcasts, then automations, and then AI agents.
 
 ## What the four have in common
 
-I've tried to say something wise here and every version is a cliché. The honest version: each time, the signal was in how customers behaved, not in what they said they wanted. Watching where a conversation moved after our product ended was worth more than any survey.
+Each time, the signal was in how customers behaved. Watching where the conversation moved after our product ended told us more than asking anyone what they wanted.

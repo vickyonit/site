@@ -3,7 +3,7 @@ title: "71% of my agent conversations end as \"timeout\". That isn't failure."
 description: "How I measure AI agents when most chats just go quiet, and why I stopped reporting a resolution rate."
 ---
 
-I pulled the numbers for our WhatsApp agents last week. Across roughly 90,000 conversations in a quarter, the final status looked like this:
+Across roughly 90,000 conversations in a quarter, the final status of our WhatsApp agent conversations looked like this:
 
 | Status | Conversations | Share |
 | --- | --- | --- |
@@ -13,7 +13,7 @@ I pulled the numbers for our WhatsApp agents last week. Across roughly 90,000 co
 | in progress | 1,711 | 2% |
 | failed | 16 | under 0.1% |
 
-My first reaction was that 71% sounded terrible. It isn't, and working out why changed how I think about measuring agents.
+At first glance, 71% looks terrible. It isn't, and the reason says a lot about how to measure agents.
 
 ## What "timeout" means
 
@@ -37,4 +37,4 @@ Counting statuses is the easy part. Knowing whether the customer got what they c
 
 Usage is not evenly spread. Of the 94 accounts with active agents, the top five account for 97% of conversations. Averages across all accounts would have told me a story that isn't real.
 
-I don't have a clean outcome metric yet. If you do, I'd like to hear how you got it.
+We don't have a clean outcome metric yet.

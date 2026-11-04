@@ -33,4 +33,4 @@ The fix was to stop judging loosely at read time. We now normalize each answer o
 
 I built a coaching view that ranked people by score and a notes field for managers. Nobody saw the notes, and the ranking had no workflow behind it. I removed both. A number with nothing to do about it costs attention and returns none.
 
-We've scored about three thousand conversations so far. It's early, and I'd rather say that than call it a quality system.
+We've scored about three thousand conversations so far, so it's early.

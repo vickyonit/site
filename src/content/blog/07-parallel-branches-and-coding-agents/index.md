@@ -31,9 +31,3 @@ An agent that drives a browser to check a UI change can't type your password, an
 Our repo has a short, always-loaded guide with the rules that matter most: every query is scoped to the account, never bypass the messaging callbacks, and when a question is about what a user sees, show a screenshot instead of describing it. Longer reference docs for each subsystem are linked from it and loaded only when a task touches that area.
 
 The short file is the important part. A long one gets skimmed by humans and agents alike. The rules that prevent expensive mistakes go in the short file, and everything else goes behind a link.
-
-## What I'd tell you
-
-- Isolation beats coordination. Don't ask sessions to take turns; give each one its own world.
-- If an agent keeps making the same mistake, the guide is missing a rule.
-- Keep the always-on file small enough that you'd read it yourself.

@@ -3,9 +3,9 @@ title: "Counting things in a 50M-row table without hurting production"
 description: "Notes from pulling usage numbers out of a live database where every useful index starts with account_id."
 ---
 
-I needed some usage numbers from production: how many conversations our agents handled, across how many accounts. The obvious queries would have been a bad idea. The messages table has about 49 million rows, and I didn't want to find out how it behaves under a full scan.
+The messages table has about 49 million rows. To pull usage numbers from production, such as how many conversations our agents handled and across how many accounts, the obvious queries would have been a bad idea.
 
-Here is what I did instead.
+Here is what we did instead.
 
 ## Start from the indexes, not the question
 
