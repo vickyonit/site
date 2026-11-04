@@ -1,7 +1,6 @@
 ---
 title: "The Art of Letting Go: Why We Need to Stop Over-Controlling Our AI"
 description: "Discover how loosening control over our LLM-driven customer support bot led to more natural and effective interactions, enhancing user experience. Learn practical steps to avoid the pitfalls of over-controlling your AI systems."
-date: "Jan 24 2025"
 ---
 
 Last week, I realized something I’ve always cautioned against: using overly rigid prompts for our LLM-driven customer support bot. Essentially, we were taking a high-performance vehicle and forcing it onto a single-track rail, unable to maneuver freely where it excelled most.

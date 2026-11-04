@@ -1,7 +1,6 @@
 ---
 title: "Welcome to my blog"
 description: "Basic rant on what I would use this blog for."
-date: "Jan 21 2025"
 ---
 
 Hey!
