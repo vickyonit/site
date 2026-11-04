@@ -4,7 +4,7 @@ description: "The design behind agent handoff: what context travels, who stays i
 ---
 Handoff is where agent systems show their seams. An agent that can't pass work on, to a person or to another agent, either fails customers quietly or pretends to know things it doesn't. This post describes the three kinds of handoff in our system, what context travels with each, and the design decisions that kept them reliable.
 
-About 15% of the conversations our agents handle end with a handoff to a person. It's tempting to treat that number as the thing to drive down. The better question isn't "how do we avoid escalation?" but "how do we make escalation good?"
+It's tempting to treat the share of conversations that end in a handoff to a person as the number to drive down. The better question isn't "how do we avoid escalation?" but "how do we make escalation good?"
 
 This post covers how we built it. Handoff in an agent system is really three different things, and mixing them up causes most of the pain.
 
@@ -46,4 +46,4 @@ We pin which runtime an agent uses when a session starts, and never change it af
 
 ## Summary
 
-Treat "who is in charge of this conversation" as data in the database, not as something the prompt is asked to remember. Pass a summary and a reason with every handoff so the next party doesn't start cold. And give the agent a way to ask for help without giving up the conversation. About 15% of our conversations reach a person; we treat that as a number to watch, not a target.
+Treat "who is in charge of this conversation" as data in the database, not as something the prompt is asked to remember. Pass a summary and a reason with every handoff so the next party doesn't start cold. And give the agent a way to ask for help without giving up the conversation.

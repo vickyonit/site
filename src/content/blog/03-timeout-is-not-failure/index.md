@@ -1,20 +1,10 @@
 ---
-title: "71% of our agent conversations end as \"timeout\". That isn't failure."
+title: "Most of our agent conversations end as \"timeout\". That isn't failure."
 description: "How session states work in a WhatsApp agent, why most chats end by going quiet, and what to measure instead of a resolution rate."
 ---
 Running AI agents on WhatsApp taught us early that the usual way to read an agent's results, one status per conversation, doesn't work on a channel where conversations never formally end. This post explains how session states work in our system, what the numbers look like in practice, and what we measure instead.
 
-Across roughly 90,000 agent conversations in a quarter, the final status looked like this:
-
-| Status | Conversations | Share |
-| --- | --- | --- |
-| timeout | 63,855 | 71% |
-| escalated | 13,878 | 15.5% |
-| completed | 10,094 | 11% |
-| in progress | 1,711 | 2% |
-| failed | 16 | under 0.1% |
-
-At first glance, 71% looks terrible. It isn't, and the reason says a lot about how to measure agents on a channel like WhatsApp.
+In any given quarter, most of our agent conversations end with the status `timeout`. A smaller share escalate to a person, a smaller share are marked `completed` by the agent, and failures are rare. At first glance, a majority of `timeout` looks terrible. It isn't, and the reason says a lot about how to measure agents on a channel like WhatsApp.
 
 ## 1. A conversation on WhatsApp doesn't end. It stops.
 
@@ -39,15 +29,15 @@ Nothing went wrong in that conversation. The customer got an answer, lost intere
 - **timeout** is the default way a conversation ends. It tells you nothing about whether the customer was happy.
 - **completed** means the agent explicitly closed the conversation. It's a small, biased sample.
 - **escalated** means a person was needed, and a person picked it up.
-- **failed** means something broke. At 16 out of about 90,000, it's the one to watch for movement.
+- **failed** means something broke. It's rare, which is why any movement in it is worth noticing.
 
 Two of the three big buckets are mostly "the customer stopped replying". Neither is success or failure.
 
 ## 3. Why we don't report a resolution rate
 
-If we called `completed` a resolution, the rate would be 11%. If we called everything that wasn't escalated a resolution, it would be 84%. Both come from the same data. Neither is true, because a customer who stopped replying might be satisfied, or might have given up.
+If we called `completed` a resolution, the rate would look low, because most agents rarely close conversations themselves. If we called everything that wasn't escalated a resolution, it would look high. Both come from the same data, and neither is true, because a customer who stopped replying might be satisfied, or might have given up.
 
-The only number we trust from this table is the escalation rate, about 15%, because a human actually took those conversations. It's a lower bound on "the agent wasn't enough", not a measure of "the agent worked".
+The only outcome we trust from the statuses is escalation, because a human actually took those conversations. It's a lower bound on "the agent wasn't enough", not a measure of "the agent worked".
 
 ## 4. What does tell you if an agent is working
 
@@ -58,7 +48,7 @@ A few things to do on any channel without clear endings:
 1. **Define the end yourself.** Pick an expiry that fits your customers' pace, and treat the resulting state as "went quiet", not as a verdict.
 2. **Track the states that need a human.** Escalations are the one outcome that's unambiguous.
 3. **Sample and read.** A small number of conversations read carefully beats a large number classified by a status field.
-4. **Watch `failed` and the trend, not the share.** A stable 71% timeout is normal. A jump in failures is not.
+4. **Watch `failed` and the trend, not the share.** A steady majority of timeouts is normal. A jump in failures is not.
 
 ## Summary
 

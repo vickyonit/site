@@ -17,7 +17,7 @@ Every bar in Insights links into Results with the right filter applied. "Which q
 
 ## 2. A score is only as good as its click-through
 
-If a bar says "60% miss rate" and the list underneath is empty, nobody trusts the page again.
+If a bar shows a high miss rate and the list underneath is empty, nobody trusts the page again.
 
 That happened to us. The drill-down was an exact match in SQL, but the Ruby code judged answers leniently. The model would answer "No." with a full stop. One code path counted that as a miss, and the other found no matching row.
 
@@ -74,8 +74,6 @@ Each run also records how many conversations it scanned, sampled, evaluated, ski
 ## 6. What we removed
 
 We built a coaching view that ranked people by their score, and a notes field for managers. Nobody saw the notes, and the ranking had no workflow behind it. We removed both. A number you can't act on costs attention and returns none.
-
-We've scored about three thousand conversations so far, so it's early.
 
 ## Summary
 

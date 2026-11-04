@@ -1,6 +1,6 @@
 ---
 title: "Running WhatsApp agents for customers: the model we chose and what they use them for"
-description: "Why our agents run on Gemini, and three real deployments: a replaced call centre, order and product questions, and one that was set up elaborately and then stopped."
+description: "Why our agents run on Gemini, and two real deployments: a replaced call centre, and order and product questions."
 ---
 
 Since mid-2025 we've been building AI agents on top of Peach. This is a plain account of the model we chose and what customers actually did with them.
@@ -22,11 +22,3 @@ It wasn't a pilot alongside the old system. They switched. For that to work, the
 ### They let customers ask about products and orders
 
 A large manufacturer uses our agents so their customers can ask about products and the orders they've placed. It's the unglamorous use case that answers questions which would otherwise go to a support person.
-
-### One set up elaborately, then stopped
-
-Another customer set up their entire business workflow across multiple agents. They aren't using it anymore.
-
-## The numbers
-
-Over a recent quarter, the agents handled about 90,000 conversations. About 15% escalated to a person. Most of the rest simply went quiet, which is normal on WhatsApp and is covered in [another post](/blog/03-timeout-is-not-failure).
