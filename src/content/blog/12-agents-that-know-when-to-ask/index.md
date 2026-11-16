@@ -8,15 +8,15 @@ I build agents in two places: a WhatsApp product for small businesses, and a wor
 
 What I wanted was an agent that behaves like a decent colleague. Do what it can, say so when it can't, and make it easy for the right person to step in. And I wanted that built into the system, not left to the agent remembering to be polite.
 
-## What I changed
+## What was wrong, and what I changed
 
-**Asking isn't the same as escalating.** If the agent needs one fact, say a policy exception, it asks a person inside the conversation and stays in charge. Only a real handover moves ownership. That kept more conversations with the agent without pretending it knew things it didn't.
+**The agent had no real way to ask.** It could answer, or it could hand the whole conversation to a person. Nothing in between. When it wasn't sure, it improvised a third option: it said it would check. So I gave it a real one. The agent can now put a question to a person inside the conversation and stay in charge of the customer. Only a genuine handover moves ownership.
 
-**A promise needs an action behind it.** If an agent tells a customer it will check internally, the system now checks that a question was actually filed. If not, it nudges the agent to file one, or to hand over to a person. The customer still gets the message, so nothing feels broken.
+**The promise had nothing behind it.** Even with a way to ask, a model can say "let me check" and never use it, which is exactly what happened. So the system now looks for that promise. If the agent tells a customer it will check internally and no question was filed, it nudges the agent to file one, or to hand over to a person. The customer still gets the message, so nothing feels broken.
 
-**Someone always owns the conversation.** At any moment it's either the agent or a person, and that's recorded in the system. I didn't want to rely on a prompt that says "stop replying once a human steps in."
+**Nobody was clearly in charge.** Once an agent can ask for help, and a person can step in, someone has to own the conversation at every moment. It's either the agent or a person, and that's recorded in the system. I didn't want to rely on a prompt that says "stop replying once a human steps in."
 
-**The team product works the same way.** Before it starts, the agent checks that the tools and data it needs are available. If it hits a question halfway through, the work pauses in a visible "blocked" state and picks up when someone answers.
+**The team product had the same shape.** An agent would start a job without the tools or data it needed, or hit a question halfway through, and guess. Now it checks that everything it needs is available before it starts. If it hits a question midway, the work pauses in a visible "blocked" state and picks up when someone answers.
 
 ## What the numbers say
 
