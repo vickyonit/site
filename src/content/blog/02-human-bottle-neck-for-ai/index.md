@@ -1,103 +1,31 @@
 ---
-title: "The Art of Letting Go: Why We Need to Stop Over-Controlling Our AI"
-description: "Discover how loosening control over our LLM-driven customer support bot led to more natural and effective interactions, enhancing user experience. Learn practical steps to avoid the pitfalls of over-controlling your AI systems."
+title: "Over-scripting our support bot made it worse"
+description: "A short case study on loosening tight prompts in an LLM-driven support bot, and why letting go of the script is not the same as letting go of control."
 ---
+I used to caution against over-controlling language models, and then I caught my own team doing it. This is what happened, in Situation, Task, Action, Result form.
 
-Last week, I realized something I’ve always cautioned against: using overly rigid prompts for our LLM-driven customer support bot. Essentially, we were taking a high-performance vehicle and forcing it onto a single-track rail, unable to maneuver freely where it excelled most.
+## Situation
 
-## The “Aha” Moment
+Our customer support bot ran on tightly scripted prompts: fixed templates and step-by-step flows for tasks like booking and rescheduling. It was predictable, which is why we built it that way.
 
-During a recent review, we encountered a user seeking to reschedule an appointment, complicated by an international trip to a different time zone. Our meticulously defined prompt structure gave a formally correct but practically useless answer about local time slots—completely ignoring their unique travel scenario.
+During a review, I found a customer who wanted to reschedule an appointment while travelling to a different time zone. The bot gave a correct answer about local time slots. It was also useless, because it ignored the one thing that made this customer's situation different.
 
-Below is our original setup:
+## Task
 
-```ruby
-# Before: Overly Restrictive
-def handle_scheduling(request)
-  response = llm.complete(
-    prompt: "TIME_SLOT_TEMPLATE",
-    parameters: {
-      date: request.date,
-      time: request.time,
-      action: "RESCHEDULE"
-    }
-  )
-end
-```
+I wanted the bot to help the customer in front of it, including the ones whose situation didn't fit the script.
 
-Now, here’s the updated version:
+## Action
 
-```ruby
-# After: Letting AI Shine
-def handle_scheduling(request)
-  response = llm.complete(
-    prompt: "You're a helpful scheduling assistant. The customer needs assistance with: #{request}. 
-            Consider their situation, time zones, and preferences, while keeping a natural dialog."
-  )
-end
-```
+I replaced the rigid template with a clear goal and clear boundaries. I gave the bot the context it needed, such as available slots, the customer's time zone and their preferences, and let it work out how to get there. I stopped dictating every step of the conversation.
 
-The change was dramatic. Instead of rigidly following a template, our AI started asking the right questions, understanding user circumstances, and even coming up with alternative suggestions we hadn’t considered before.
+## Result
 
-## Why Does This Happen?
+The bot started asking the right questions, took the customer's circumstances into account, and offered alternatives we hadn't thought of. That comes from reading conversations, not from a measured comparison, and measuring it is the next step.
 
-It’s understandable. We often want to control every detail to ensure reliability and predictability. Sadly, this approach ends up:
+The bigger change was in how I think about control. Loosening the script doesn't mean loosening control. The control that matters moved elsewhere: what the bot is allowed to do, when it must hand over to a person, and who owns the conversation. I wrote about that in [Agents that know when to ask](/blog/12-agents-that-know-when-to-ask).
 
-1. Neglecting the most powerful feature of LLMs—their capacity to interpret context and adapt.
-2. Piling extra work on our shoulders.
-3. Diminishing the user’s overall experience.
+## What I took from it
 
-## Breaking Free: What Works Better
-
-After months of trial and error, here’s what made the difference:
-
-1. **Trust the Process**  
-   Instead of micromanaging each interaction, clarify goals and boundaries and let the AI navigate how to reach them.
-
-2. **Embrace Variation**  
-   Users differ in preferences, tone, and needs. Modern LLMs excel at customizing responses if allowed freedom.
-
-3. **Measure Success, Not Layout**  
-   Concentrate on whether solutions are effective, not whether they follow a rigid script.
-
-## A Real-World Example
-
-Here’s an example from our appointment booking process:
-
-```ruby
-# Old Method: Step-by-Step Script
-def book_appointment
-  steps = [
-    "ASK_DATE",
-    "VALIDATE_DATE",
-    "ASK_TIME",
-    "VALIDATE_TIME",
-    "CONFIRM_BOOKING"
-  ]
-  
-  steps.each do |step|
-    execute_step(step)
-  end
-end
-
-# New Method: Natural Interaction
-def book_appointment
-  context = {
-    available_slots: get_available_slots(),
-    user_timezone: detect_user_timezone(),
-    scheduling_preferences: get_user_preferences()
-  }
-  
-  llm.interact(
-    system_prompt: "Help schedule an appointment in the best possible way. 
-                   Be mindful of the user’s time zone and preferences.",
-    context: context
-  )
-end
-```
-
-## Taking It Forward
-
-Whenever you’re setting up an LLM-based solution, ask yourself: “Am I empowering the AI or just imposing a strict checklist?” 
-
-Our ultimate goal is to solve real-world problems and support users effectively. Sometimes, giving the AI more freedom is exactly what’s needed to accomplish that.
+- Ask whether you are empowering the model or imposing a checklist on it.
+- Specify the goal and the boundaries. Don't specify every step.
+- Judge the result by whether the customer's problem got solved, not by whether the script was followed.

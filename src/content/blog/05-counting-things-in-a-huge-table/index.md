@@ -1,6 +1,7 @@
 ---
 title: "Counting things in a huge table without hurting production"
 description: "How to pull usage numbers from a live database when every useful index starts with account_id."
+draft: true
 ---
 Some of the most useful questions about a product, such as how much it is used, are also the easiest to answer in a way that harms production. This post describes how we pull numbers from tables with tens of millions of rows without scanning them.
 

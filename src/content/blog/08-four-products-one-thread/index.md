@@ -18,7 +18,7 @@ If customers keep describing a bigger product than the one you built, that's a s
 
 Gumstack let a shopper on a retailer's website place an audio or video call to someone in the store, and shop on the call.
 
-It worked. We watched real deals close over video calls, including a ₹4 lakh sale for Urban Ladder. Brands like Urban Ladder, Furlenco, Koskii and PN Rao used it.
+It worked. We watched real deals close over video calls, including a ₹4 lakh sale for a leading furniture and home retailer. Several Indian retailers used it.
 
 But calls were a function of traffic. Roughly a tenth of visitors made a call, so a store with less online traffic got fewer calls. To get value from Gumstack, customers first had to spend money building traffic. For retailers whose main channel wasn't online, that never made sense, and they churned.
 

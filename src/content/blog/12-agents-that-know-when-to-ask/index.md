@@ -27,12 +27,16 @@ Four decisions shaped the design.
 
 ## Result
 
-Conversations and tasks now have a clear owner and a clear state. When an agent is stuck, a person sees it and can answer, and the work continues from where it stopped. The failure I started with, the quiet promise that never gets kept, is now caught instead of silently lost.
+Conversations and tasks now have a clear owner and a clear state, and the quiet promise that never gets kept is caught instead of silently lost. I also measured the WhatsApp side over the last 90 days, across a handful of agents:
 
-I haven't yet measured whether people resolve these questions faster, or whether customers prefer the outcome. That is the next thing I want to show with numbers.
+- **The agent stays in charge.** Fewer than 1 in 10 of a couple of thousand conversations ended with a person taking over. Among the conversations where the agent asked a person for help instead, only a few percent did.
+- **The human side is the weak spot.** Fewer than half of the questions the agent filed were answered by a teammate. A typical answer took a few days, and the slowest took weeks. Most of those conversations had ended as "went quiet", about the same share as across all conversations.
+
+So the mechanism works, and the bottleneck is how quickly the right person sees and answers the question. That points to where to work next. I haven't measured whether customers preferred the outcome.
 
 ## What I took from it
 
 - An agent that can say "I need help" is more valuable than one that is right slightly more often.
 - Put the rules about who is in charge in the system, not in the prompt.
 - Treat "waiting for a person" as a real state, with an owner and a way back.
+- Measure the human half of the loop too. An agent that asks well still depends on how fast someone answers.

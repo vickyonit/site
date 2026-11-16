@@ -1,55 +1,32 @@
 ---
 title: "Most of our agent conversations end as \"timeout\". That isn't failure."
-description: "How session states work in a WhatsApp agent, why most chats end by going quiet, and what to measure instead of a resolution rate."
+description: "Why most WhatsApp agent conversations end by going quiet, and what I measure instead of a resolution rate."
 ---
-Running AI agents on WhatsApp taught us early that the usual way to read an agent's results, one status per conversation, doesn't work on a channel where conversations never formally end. This post explains how session states work in our system, what the numbers look like in practice, and what we measure instead.
+Reading an agent's results from one status per conversation doesn't work on a channel where conversations never formally end. Here is how I handled that, in Situation, Task, Action, Result form.
 
-In any given quarter, most of our agent conversations end with the status `timeout`. A smaller share escalate to a person, a smaller share are marked `completed` by the agent, and failures are rare. At first glance, a majority of `timeout` looks terrible. It isn't, and the reason says a lot about how to measure agents on a channel like WhatsApp.
+## Situation
 
-## 1. A conversation on WhatsApp doesn't end. It stops.
+We run AI agents on WhatsApp. Over the last 90 days, our newest type of agent, the autonomous agent, handled a couple of thousand conversations. Roughly 8 in 10 ended with the status "timeout", fewer than 1 in 10 were escalated to a person, and the rest were still open. None were marked "completed" by the agent, and none failed. At first glance, a majority of "timeout" looks terrible.
 
-On a phone call, the conversation has a clear end. Someone hangs up. On WhatsApp, a customer asks a question, gets an answer, and puts the phone down. There is no goodbye, and nothing in the protocol tells you they're done.
+It isn't. On a phone call, someone hangs up. On WhatsApp, a customer asks a question, gets an answer and puts the phone down. Nothing tells you they're done, so the system closes a conversation only when its clock runs out.
 
-So every agent conversation in our system is a session with an expiry time. If a session is still open when that time passes, a background job moves it to `timeout`:
+## Task
 
-```ruby
-def self.end_timedout_sessions
-  ids = Wa::StreamSession.where(expiry_time: ..Time.now, status: :in_progress).pluck(:id)
-  Wa::StreamSession.where(id: ids).update_all(status: :timeout)
-  BotSession.where(context_type: 'Wa::StreamSession', context_id: ids).update_all(status: :closed)
-end
-```
+I needed to report on how the agents were doing without publishing a number that was either flattering or damning for the wrong reasons.
 
-Nothing went wrong in that conversation. The customer got an answer, lost interest, or went to lunch, and the clock ran out.
+## Action
 
-`completed` is a different thing. It only happens when the agent itself decides the conversation is finished and closes it. Most agents rarely do that, because most customers never say goodbye.
+- **Defined the end ourselves.** A conversation that goes quiet is recorded as "went quiet", not as a verdict. The customer may have been satisfied, or may have given up.
+- **Refused to publish a resolution rate.** Counting only agent-closed conversations would give 0%, because our agents never close one and customers never say goodbye. Counting everything not escalated makes it look high. Both come from the same data and neither is true.
+- **Trusted the one unambiguous outcome.** Escalation means a person actually took the conversation. It's a lower bound on "the agent wasn't enough", not a measure of "the agent worked".
+- **Read real conversations.** To know whether the customer got what they came for, someone has to read a sample. A small number read carefully beats a large number classified by a status field.
 
-## 2. So what do the buckets mean?
+## Result
 
-- **timeout** is the default way a conversation ends. It tells you nothing about whether the customer was happy.
-- **completed** means the agent explicitly closed the conversation. It's a small, biased sample.
-- **escalated** means a person was needed, and a person picked it up.
-- **failed** means something broke. It's rare, which is why any movement in it is worth noticing.
+I now report escalations and failures, watch their trend, and judge quality from samples of real conversations. In the last 90 days that is fewer than 1 in 10 escalated and no failures. A steady majority of "timeout" is normal. A jump in failures is the thing worth noticing. I deliberately have no single resolution-rate number.
 
-Two of the three big buckets are mostly "the customer stopped replying". Neither is success or failure.
+## What I took from it
 
-## 3. Why we don't report a resolution rate
-
-If we called `completed` a resolution, the rate would look low, because most agents rarely close conversations themselves. If we called everything that wasn't escalated a resolution, it would look high. Both come from the same data, and neither is true, because a customer who stopped replying might be satisfied, or might have given up.
-
-The only outcome we trust from the statuses is escalation, because a human actually took those conversations. It's a lower bound on "the agent wasn't enough", not a measure of "the agent worked".
-
-## 4. What does tell you if an agent is working
-
-Counting statuses is the easy part. To know whether the customer got what they came for, someone has to read the conversation. That's why we built scheduled audits that score a sample of real conversations against a rubric a manager writes, instead of trusting the status column.
-
-A few things to do on any channel without clear endings:
-
-1. **Define the end yourself.** Pick an expiry that fits your customers' pace, and treat the resulting state as "went quiet", not as a verdict.
-2. **Track the states that need a human.** Escalations are the one outcome that's unambiguous.
-3. **Sample and read.** A small number of conversations read carefully beats a large number classified by a status field.
-4. **Watch `failed` and the trend, not the share.** A steady majority of timeouts is normal. A jump in failures is not.
-
-## Summary
-
-A status field records how a session ended inside the system, not how the conversation went. On a channel without clear endings, define the end yourself, track the states that need a person, and read samples of real conversations to judge quality.
+- A status field records how a session ended in the system, not how the conversation went.
+- On a channel without clear endings, define the end yourself and treat it as "went quiet".
+- Track the states that need a person, and read samples to judge quality.
