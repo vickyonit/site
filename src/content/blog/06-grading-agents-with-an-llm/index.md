@@ -1,81 +1,44 @@
 ---
-title: "Grading AI agents with an LLM: the bugs that made our scores lie"
-description: "How scheduled conversation audits work, and the rules that keep the scores honest: N/A answers, a JSON false, and a score you can click through."
-featured: 2
+title: "Making AI-graded scores something a manager can trust"
+description: "A STAR-style walkthrough of building conversation quality scores with an LLM, and what I learned when the first numbers turned out to be wrong."
+draft: true
 ---
-Using a model to grade conversations is easy to start and hard to trust. The difficult part isn't the prompt; it's making the numbers honest enough that a manager acts on them. We score real customer conversations against rubrics that a manager writes: the model answers each question, we aggregate the answers, and a dashboard shows where quality is breaking. This post covers how it works and the rules we adopted after our scores turned out to be wrong in ways that were easy to miss.
+Using an AI model to grade conversations is easy to start and hard to trust. This is a short account of how I approached that problem, written as Situation, Task, Action, Result.
 
-## 1. The loop a manager follows
+## Situation
 
-The product has four tabs, in the order a manager works:
+Businesses on our platform have thousands of customer conversations, handled by both human agents and AI agents. Managers can't read them all. They wanted to know where quality was slipping, without sampling a few chats by hand and hoping those were representative.
 
-1. **Insights.** Where is quality breaking?
-2. **Results.** Show me the conversations behind that number.
-3. **Runs.** Did it actually run, what did it cover, what did it cost?
-4. **Questions.** Change what gets measured.
+The idea was simple: let managers write the questions they care about, such as "Did the agent confirm the delivery date?" Then let a model answer those questions across their conversations and show the results on a dashboard.
 
-Every bar in Insights links into Results with the right filter applied. "Which question fails most?" and "show me why" are one click apart. That click is the most important design decision, and it's also where our first big bug lived.
+The first version worked, in the sense that numbers appeared. But some of those numbers were wrong in ways that were easy to miss.
 
-## 2. A score is only as good as its click-through
+## Task
 
-If a bar shows a high miss rate and the list underneath is empty, nobody trusts the page again.
+My job was to make the scores trustworthy enough for a manager to act on. That meant three things:
 
-That happened to us. The drill-down was an exact match in SQL, but the Ruby code judged answers leniently. The model would answer "No." with a full stop. One code path counted that as a miss, and the other found no matching row.
+- A number on the dashboard should always lead to the conversations behind it.
+- A failure should look like a failure, never like a good score.
+- It should be clear what was measured, what was skipped and what it cost.
 
-The fix was to stop judging loosely at read time. We normalize every answer once, when it's stored:
+## Action
 
-| The model returns | Stored as | Judged as |
-| --- | --- | --- |
-| `"No."`, `"No, never confirmed"` | `No` | miss |
-| JSON `false` or `true` | `No` or `Yes` | miss or pass |
-| `"Not applicable."` | `N/A` | not applicable |
-| `"4/5"` | `4` | a rating of 4 |
-| a rating of `9` on a 5-point scale, or `"good"` | stored as given | unanswered |
+I started by finding where the scores were quietly misleading, and I fixed each one at its root rather than patching the display.
 
-After that, the chart and the list can't disagree, because they read the same normalized value.
+- **Make the chart and the list agree.** In the first version, a headline number could click through to an empty list. I changed it so both read from the same source, so what a manager sees at the top always matches what they find underneath.
+- **Treat "can't tell" honestly.** Some answers failed silently and disappeared from the totals. Others were misread and counted as passes. I set one rule: an answer the system can't read is never a pass, and "not applicable" never counts against anyone.
+- **Fail loudly.** An early version filled in a neutral placeholder score whenever the model call failed. It looked exactly like a real score and quietly distorted the averages. Now a failed run says it failed, and shows how much of the work completed.
+- **Show the work.** Every run records what it covered, what it skipped and what it cost, so a manager can answer "did it run, and on what?" without asking an engineer.
+- **Cut what nobody used.** I built a coaching view that ranked people and added a notes field. Nobody used them, so I removed them. A number that can't be acted on only costs attention.
 
-## 3. Three bugs worth knowing about
+## Result
 
-**A JSON `false` is an answer.** We read answers with `answer['value'] || answer[:value]`. When the model returned `false`, which is a real failing answer, the code treated it as missing and dropped it from every aggregate. Our failures were quietly disappearing. When `false` is a valid value, use `fetch` or `key?`, never `||`.
+Managers now have a view they can trace from a headline number down to individual conversations, and a clear record of every run. The class of "the number looks fine but is wrong" problems I found has been closed off, and each fix is covered by automated tests.
 
-**"No." scored as a pass.** One comparison was `== 'no'`, so a trailing full stop turned a miss into a pass.
+I haven't yet shown how closely the model's grading agrees with human reviewers. So far I've made the scores consistent and traceable. Showing that they're accurate is the next step.
 
-**Ratings off the scale flattered the score.** A rating of 9 on a 5-point scale was cast with `to_i` and counted in the denominator, nudging the average up. Now an answer we can't read is simply unanswered. It's never a zero-star review and never a pass.
+## What I took from it
 
-A fourth one is subtler. Question keys are derived from the title and cut to 40 characters, so two long, similar questions, such as "…verify the customer's registered mobile number?" and "…email address?", produced the same key, and one answer was shown against both. Keys now get disambiguated, and a unique index backs it up.
-
-## 4. Rules for a rubric people trust
-
-- **No N/A penalty.** A question that only applies to a third of conversations shouldn't count the other two thirds as failures. N/A answers are excluded from every denominator.
-- **A missing answer is information.** The scorecard always lists every question in the manager's order, including the ones the model skipped.
-- **An answer we can't read is never a pass.** One gate decides whether an answer counts at all.
-- **No overall pass/fail column.** Judgement lives per question, because a single verdict hides which one failed.
-- **A run never scores the same conversation twice.** It's enforced with a unique index, not just code.
-
-## 5. How a run executes
-
-Nothing in the app wakes a rule up by itself. A Cloud Scheduler job, defined in Terraform, hits an endpoint every 15 minutes. That fans out to every rule whose next run time has passed, and each one becomes a run with an explicit time window:
-
-```
-scheduler tick (every 15 min)
-  -> find rules where next_run_at <= now
-    -> create a run with a window, advance next_run_at
-      -> filter matching conversations, drop already-scored ones
-        -> sample (with a hard ceiling, applied in SQL)
-          -> score in batches of 10
-```
-
-Two details worth copying:
-
-- **The tick interval is the worst-case lateness.** The scheduler only looks backwards at rules that are already due. At 15 minutes, a rule set for 09:00 fires between 09:00 and 09:15. A tick with nothing due is one indexed query, so tightening it is cheap.
-- **Every tick writes a status row, even when nothing was due.** A 200 from the endpoint only proves a job was enqueued. A row from the job itself lets you tell "ran, nothing to do" from "never ran".
-
-Each run also records how many conversations it scanned, sampled, evaluated, skipped and failed, plus the tokens it used. When a manager asks "did it run, and what did it cover?", the answer is on the page.
-
-## 6. What we removed
-
-We built a coaching view that ranked people by their score, and a notes field for managers. Nobody saw the notes, and the ranking had no workflow behind it. We removed both. A number you can't act on costs attention and returns none.
-
-## Summary
-
-A model-graded score is only useful if it can be checked. Normalize answers once, when you store them. Make every number link to the conversations behind it. Never let an answer you can't read count as a pass. And record what each run scanned, sampled and skipped, so that "did it run?" has an answer on the page.
+- A model-graded score is only useful if someone can check it.
+- Most of the trust problems weren't about the AI's judgement. They were about what happened to its answers on the way to the dashboard.
+- The next piece of work is to measure the grader against people, and to be open about where they disagree.
