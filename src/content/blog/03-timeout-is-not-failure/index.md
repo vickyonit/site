@@ -2,31 +2,22 @@
 title: "Most of our agent conversations end as \"timeout\". That isn't failure."
 description: "Why most WhatsApp agent conversations end by going quiet, and what I measure instead of a resolution rate."
 ---
-Reading an agent's results from one status per conversation doesn't work on a channel where conversations never formally end. Here is how I handled that, in Situation, Task, Action, Result form.
+Over the last 90 days, our newest kind of agent, the autonomous agent, handled a couple of thousand WhatsApp conversations. Roughly 8 in 10 ended with the status "timeout". Fewer than 1 in 10 were escalated to a person, and the rest were still open. None were marked "completed" by the agent, and none failed.
 
-## Situation
+A majority of "timeout" looks terrible at first glance. It isn't.
 
-We run AI agents on WhatsApp. Over the last 90 days, our newest type of agent, the autonomous agent, handled a couple of thousand conversations. Roughly 8 in 10 ended with the status "timeout", fewer than 1 in 10 were escalated to a person, and the rest were still open. None were marked "completed" by the agent, and none failed. At first glance, a majority of "timeout" looks terrible.
+## A conversation on WhatsApp doesn't end. It stops.
 
-It isn't. On a phone call, someone hangs up. On WhatsApp, a customer asks a question, gets an answer and puts the phone down. Nothing tells you they're done, so the system closes a conversation only when its clock runs out.
+On a phone call, someone hangs up. On WhatsApp, a customer asks a question, gets an answer and puts the phone down. Nothing tells you they're done, so the system closes a conversation only when its clock runs out. "Timeout" mostly means "went quiet". The customer may have been happy, or may have given up.
 
-## Task
+## Why I don't report a resolution rate
 
-I needed to report on how the agents were doing without publishing a number that was either flattering or damning for the wrong reasons.
+If I counted only the conversations the agent closed itself, the rate would be 0%, because our agents never close one and customers never say goodbye. If I counted everything that wasn't escalated, the rate would look great. Both come from the same data, and neither is true.
 
-## Action
+The one outcome I trust from the statuses is escalation, because a person actually took over. It's a floor on how often the agent wasn't enough, not a measure of whether it worked.
 
-- **Defined the end ourselves.** A conversation that goes quiet is recorded as "went quiet", not as a verdict. The customer may have been satisfied, or may have given up.
-- **Refused to publish a resolution rate.** Counting only agent-closed conversations would give 0%, because our agents never close one and customers never say goodbye. Counting everything not escalated makes it look high. Both come from the same data and neither is true.
-- **Trusted the one unambiguous outcome.** Escalation means a person actually took the conversation. It's a lower bound on "the agent wasn't enough", not a measure of "the agent worked".
-- **Read real conversations.** To know whether the customer got what they came for, someone has to read a sample. A small number read carefully beats a large number classified by a status field.
+## What I do instead
 
-## Result
+I decide what "the end" means myself, and I treat a conversation that goes quiet as exactly that. I track escalations and failures, and I watch their trend. A steady majority of timeouts is normal, but a jump in failures is not. In the last 90 days, fewer than 1 in 10 were escalated and none failed.
 
-I now report escalations and failures, watch their trend, and judge quality from samples of real conversations. In the last 90 days that is fewer than 1 in 10 escalated and no failures. A steady majority of "timeout" is normal. A jump in failures is the thing worth noticing. I deliberately have no single resolution-rate number.
-
-## What I took from it
-
-- A status field records how a session ended in the system, not how the conversation went.
-- On a channel without clear endings, define the end yourself and treat it as "went quiet".
-- Track the states that need a person, and read samples to judge quality.
+To know whether a customer got what they came for, someone has to read the conversation. A small number read carefully beats a large number classified by a status field. A status records how a session ended inside the system, not how the conversation went.
