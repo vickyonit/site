@@ -41,7 +41,7 @@ The only outcome we trust from the statuses is escalation, because a human actua
 
 ## 4. What does tell you if an agent is working
 
-Counting statuses is the easy part. To know whether the customer got what they came for, someone has to read the conversation. That's why we built scheduled audits that score a sample of real conversations against a rubric a manager writes, instead of trusting the status column. (How those work is in [another post](/blog/06-grading-agents-with-an-llm).)
+Counting statuses is the easy part. To know whether the customer got what they came for, someone has to read the conversation. That's why we built scheduled audits that score a sample of real conversations against a rubric a manager writes, instead of trusting the status column.
 
 A few things to do on any channel without clear endings:
 
