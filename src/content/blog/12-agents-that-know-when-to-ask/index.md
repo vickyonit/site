@@ -1,42 +1,33 @@
 ---
 title: "Agents that know when to ask"
-description: "A short case study from two agent products: why the most useful thing an agent can do is stop and ask a person, and what it takes to make that a normal part of the system."
+description: "An agent told a customer it would get back to them, and never asked anyone. What I changed, and what the numbers showed."
 ---
-Agents are useful tools, but I don't treat them as team members yet. The difference shows up at one moment: when the agent doesn't know. This is a short account, in Situation, Task, Action, Result form, of how I handled that moment in two products.
+I came across a conversation that bothered me. A customer had asked about a product, and our agent replied, "Let me check with our store expert and get back to you." It read fine. Except the agent never actually asked anyone. Nothing in the system was going to bring that conversation back. The customer was left waiting on a promise nobody was keeping.
 
-## Situation
+I build agents in two places: a WhatsApp product for small businesses, and a workspace product where agents do multi-step work for a team, like pulling data from several tools and writing a report. The users are different, but the failure was the same. When an agent hit something it couldn't answer, it either guessed or made a promise it couldn't keep. In support, that costs you a customer. In reporting, it costs you a wrong number that somebody trusts.
 
-I work on two agent products. One runs customer conversations on WhatsApp for small businesses. The other runs multi-step work for a team, such as pulling data from several tools and producing a report.
+What I wanted was an agent that behaves like a decent colleague. Do what it can, say so when it can't, and make it easy for the right person to step in. And I wanted that built into the system, not left to the agent remembering to be polite.
 
-They have different users, but they failed in the same way. When an agent hit something it couldn't answer, it either guessed, or it promised to "get back to you" and nothing ever followed.
+## What I changed
 
-I saw the second one in a real conversation. A customer asked about a product, and the agent replied, "Let me check with our store expert and get back to you." It never actually asked anyone. The message looked fine, but nothing in the system would ever bring that conversation back. In support, that costs a customer. In reporting, it costs a wrong number that someone trusts.
+**Asking isn't the same as escalating.** If the agent needs one fact, say a policy exception, it asks a person inside the conversation and stays in charge. Only a real handover moves ownership. That kept more conversations with the agent without pretending it knew things it didn't.
 
-## Task
+**A promise needs an action behind it.** If an agent tells a customer it will check internally, the system now checks that a question was actually filed. If not, it nudges the agent to file one, or to hand over to a person. The customer still gets the message, so nothing feels broken.
 
-I wanted agents that behave like a good colleague. They should do the work they can, say clearly when they can't, and make it easy for the right person to step in. I also wanted this to be part of how the system works, not something the agent is politely asked to remember.
+**Someone always owns the conversation.** At any moment it's either the agent or a person, and that's recorded in the system. I didn't want to rely on a prompt that says "stop replying once a human steps in."
 
-## Action
+**The team product works the same way.** Before it starts, the agent checks that the tools and data it needs are available. If it hits a question halfway through, the work pauses in a visible "blocked" state and picks up when someone answers.
 
-Four decisions shaped the design.
+## What the numbers say
 
-- **Asking is not escalating.** If the agent needs one fact, such as a policy exception, it asks a person inside the conversation and stays in charge. Only a real handover moves ownership. This kept more conversations with the agent without pretending it knew things it didn't.
-- **Catch the promise that has no action behind it.** When an agent tells a customer it will check internally, the system now verifies that a question was actually filed. If not, the agent is prompted to file it, or to hand the conversation to a person. The customer still gets the message, so nothing feels broken.
-- **Ownership is recorded, not implied.** At any moment, exactly one party is responsible for the conversation: the agent or a person. That is stored as data. Hoping the instructions get followed is not a plan.
-- **Check before starting, pause instead of guessing.** In the team product, an agent confirms that the tools and data it needs are available before it begins. If it hits a question mid-task, the work pauses in a visible "blocked" state and resumes when someone answers.
+I looked at the last 90 days across a handful of agents on WhatsApp.
 
-## Result
+Fewer than 1 in 10 of a couple of thousand conversations ended with a person taking over. Among the conversations where the agent asked a person for help instead, only a few percent did. So the agent stays in charge, which is what I wanted.
 
-Conversations and tasks now have a clear owner and a clear state, and the quiet promise that never gets kept is caught instead of silently lost. I also measured the WhatsApp side over the last 90 days, across a handful of agents:
+The human side is the weak spot. Fewer than half of the questions the agent filed were answered by a teammate. A typical answer took a few days, and the slowest took weeks. Most of those conversations had ended as "went quiet", about the same share as across all conversations.
 
-- **The agent stays in charge.** Fewer than 1 in 10 of a couple of thousand conversations ended with a person taking over. Among the conversations where the agent asked a person for help instead, only a few percent did.
-- **The human side is the weak spot.** Fewer than half of the questions the agent filed were answered by a teammate. A typical answer took a few days, and the slowest took weeks. Most of those conversations had ended as "went quiet", about the same share as across all conversations.
+So the mechanism works, and the bottleneck is how quickly the right person sees and answers the question. That's where I'd work next. I haven't measured whether customers preferred the outcome.
 
-So the mechanism works, and the bottleneck is how quickly the right person sees and answers the question. That points to where to work next. I haven't measured whether customers preferred the outcome.
+## What stays with me
 
-## What I took from it
-
-- An agent that can say "I need help" is more valuable than one that is right slightly more often.
-- Put the rules about who is in charge in the system, not in the prompt.
-- Treat "waiting for a person" as a real state, with an owner and a way back.
-- Measure the human half of the loop too. An agent that asks well still depends on how fast someone answers.
+An agent that can say "I need help" is worth more than one that's right slightly more often. And "waiting on a person" should be a real state in your system, with an owner and a way back. If you only measure the agent, you miss half the loop.
