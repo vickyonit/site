@@ -6,14 +6,20 @@ type Props = {
 }
 
 const { entry } = Astro.props;
+const series = entry.collection === "blog" && "series" in entry.data ? entry.data.series : undefined;
 ---
 
 <a href={`/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
   <div class="flex flex-col flex-1 truncate">
-    <div class="font-semibold">
-      {entry.data.title}
+    <div class="font-semibold flex items-center gap-2">
+      {series && (
+        <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/70 flex-shrink-0">
+          Part {series.part}
+        </span>
+      )}
+      <span class="truncate">{entry.data.title}</span>
     </div>
-    <div class="text-sm">
+    <div class="text-sm truncate">
       {entry.data.description}
     </div>
   </div>

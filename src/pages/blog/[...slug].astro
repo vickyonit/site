@@ -5,6 +5,9 @@ import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
+import SeriesHeader from "@components/SeriesHeader.astro";
+import SeriesPagination from "@components/SeriesPagination.astro";
+import { getSeriesNav } from "@lib/series";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
@@ -19,6 +22,9 @@ type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+const allPosts = (await getCollection("blog")).filter(p => !p.data.draft);
+const seriesNav = getSeriesNav(allPosts, post.slug);
 ---
 
 <PageLayout title={post.data.title} description={post.data.description}>
@@ -46,8 +52,18 @@ const { Content } = await post.render();
         {post.data.title}
       </div>
     </div>
+    {seriesNav && (
+      <div class="animate">
+        <SeriesHeader seriesNav={seriesNav} currentSlug={post.slug} />
+      </div>
+    )}
     <article class="animate">
       <Content />
     </article>
+    {seriesNav && (
+      <div class="animate">
+        <SeriesPagination seriesNav={seriesNav} />
+      </div>
+    )}
   </Container>
 </PageLayout>

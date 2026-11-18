@@ -1,0 +1,47 @@
+---
+import type { SeriesNavInfo } from "@lib/series";
+
+interface Props {
+  seriesNav: SeriesNavInfo;
+}
+
+const { seriesNav } = Astro.props;
+const { prevPost, nextPost } = seriesNav;
+---
+
+<nav aria-label="Series navigation" class="my-10 pt-6 border-t border-black/15 dark:border-white/20">
+  <div class="text-xs uppercase tracking-wider font-semibold text-black/50 dark:text-white/50 mb-3">
+    Series: {seriesNav.seriesTitle}
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    {prevPost ? (
+      <a
+        href={`/blog/${prevPost.slug}`}
+        class="group p-3 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors flex flex-col justify-between"
+      >
+        <div class="text-[11px] text-black/50 dark:text-white/50 flex items-center gap-1 group-hover:text-black dark:group-hover:text-white transition-colors">
+          <span>&larr;</span> Previous (Part {prevPost.data.series?.part})
+        </div>
+        <div class="font-medium text-xs text-black dark:text-white mt-1 line-clamp-2">
+          {prevPost.data.title}
+        </div>
+      </a>
+    ) : (
+      <div class="hidden sm:block"></div>
+    )}
+
+    {nextPost ? (
+      <a
+        href={`/blog/${nextPost.slug}`}
+        class="group p-3 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors flex flex-col justify-between text-right sm:col-start-2"
+      >
+        <div class="text-[11px] text-black/50 dark:text-white/50 flex items-center justify-end gap-1 group-hover:text-black dark:group-hover:text-white transition-colors">
+          Next (Part {nextPost.data.series?.part}) <span>&rarr;</span>
+        </div>
+        <div class="font-medium text-xs text-black dark:text-white mt-1 line-clamp-2">
+          {nextPost.data.title}
+        </div>
+      </a>
+    ) : null}
+  </div>
+</nav>
