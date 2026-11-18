@@ -21,7 +21,7 @@ const { series } = Astro.props;
 
 <PageLayout
   title={`${series.title} (Series)`}
-  description={`A complete 9-part engineering curriculum: ${series.title}`}
+  description={`A 9-part architectural walkthrough: ${series.title}`}
 >
   <Container>
     <div class="animate">
@@ -33,10 +33,7 @@ const { series } = Astro.props;
     <div class="space-y-4 my-10 animate">
       <div class="flex items-center gap-2">
         <span class="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80">
-          Series Curriculum
-        </span>
-        <span class="text-xs text-black/60 dark:text-white/60">
-          {series.totalParts} Parts
+          Series &bull; {series.totalParts} Parts
         </span>
       </div>
 
@@ -45,9 +42,8 @@ const { series } = Astro.props;
       </h1>
 
       <p class="text-sm text-black/70 dark:text-white/70 max-w-2xl leading-relaxed">
-        Building a production-ready, zero-dependency customer support agent from first principles in pure Python.
-        We cover strict conversational turn invariants, zero-trust authentication middleware, local markdown RAG,
-        event-driven lifecycle buses, OpenTelemetry GenAI tracing, cache-aware context compaction, and hardened Docker deployment.
+        An architectural walkthrough on building a production customer support agent from scratch in pure Python—no LangChain, no framework black boxes.
+        Every post focuses on a specific engineering problem: eliminating framework bloat, preventing prompt-injected refund fraud, local markdown search without vector DBs, and tracing latency waterfalls in Jaeger.
       </p>
 
       <div class="pt-2 flex flex-wrap items-center gap-3">
@@ -55,7 +51,7 @@ const { series } = Astro.props;
           href={`/blog/${series.firstPost.slug}`}
           class="px-4 py-2 text-xs font-semibold rounded-lg bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-opacity"
         >
-          Start Reading (Part 0 &rarr;)
+          Start with Part 0 &rarr;
         </a>
         <a
           href="https://github.com/vickyonit/agent-harness"
@@ -70,7 +66,7 @@ const { series } = Astro.props;
 
     <section class="space-y-4 my-12 animate">
       <div class="font-semibold text-black dark:text-white">
-        Curriculum Roadmap
+        The 9 Parts
       </div>
       <ul class="flex flex-col gap-3">
         {series.posts.map((post) => (

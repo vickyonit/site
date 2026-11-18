@@ -23,7 +23,7 @@ const { seriesNav, currentSlug } = Astro.props;
       href={`/blog/series/${seriesNav.seriesId}`}
       class="text-xs text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white underline underline-offset-2 transition-colors"
     >
-      Series Overview &rarr;
+      Series overview &rarr;
     </a>
   </div>
 
@@ -33,7 +33,7 @@ const { seriesNav, currentSlug } = Astro.props;
 
   <details class="group mt-3 pt-3 border-t border-black/10 dark:border-white/10 text-xs">
     <summary class="cursor-pointer font-medium text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white flex items-center justify-between transition-colors">
-      <span>Table of Contents ({seriesNav.totalParts} parts)</span>
+      <span>All {seriesNav.totalParts} parts in this series</span>
       <span class="text-[11px] opacity-60 group-open:rotate-180 transition-transform">&darr;</span>
     </summary>
     <ol class="mt-3 space-y-1.5 pl-2">

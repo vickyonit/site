@@ -1,6 +1,6 @@
 ---
 title: "Why We Skipped LangChain: Designing a Provider-Agnostic Agent Harness from First Principles"
-description: "The production pitfalls of bloated agent frameworks: conversational turn invariants, zero uncaught exceptions, and swappable provider abstractions."
+description: "How to eliminate framework bloat: building a swappable LLM provider abstraction (Gemini, Claude, GPT-4) with strict alternating turn invariants in under 400 lines of Python."
 date: "2026-11-11"
 series:
   id: "customer-support-custom-runtime"

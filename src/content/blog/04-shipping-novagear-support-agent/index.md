@@ -1,6 +1,6 @@
 ---
 title: "Shipping NovaGear: Dogfooding Our Harness with RAG, Transactions, and Eval-Driven Development"
-description: "How we implemented Case 01: NovaGear Support Agent using local markdown RAG, order state machines, and rigorous deterministic eval benchmarks."
+description: "Assembling the full customer support agent: local markdown RAG without vector DB bloat, order state machines, and a 100% pass rate across deterministic eval benchmarks."
 date: "2026-11-14"
 series:
   id: "customer-support-custom-runtime"

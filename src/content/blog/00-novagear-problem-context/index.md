@@ -1,6 +1,6 @@
 ---
-title: "The Production Agent Challenge: Why Real-World AI Support Demands a Custom Harness"
-description: "Why off-the-shelf agent frameworks fail in enterprise customer support: WISMO auth leaks, IDOR risks, hardware error troubleshooting, and human handoff."
+title: "Why customer support is where agent frameworks break"
+description: "The real-world failure modes of off-the-shelf runtimes: address leaks, IDOR refund fraud, motor reset hallucinations, and the invariants you need before putting an agent in front of customers."
 date: "2026-11-10"
 series:
   id: "customer-support-custom-runtime"

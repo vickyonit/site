@@ -129,7 +129,7 @@ Once running:
 
 Over the course of this 9-post engineering curriculum, we started with a concrete e-commerce support challenge and built a **complete, framework-free production agent harness**:
 
-* **[Part 0: The Problem Context](/blog/00-novagear-problem-context)** — The NovaGear scenario, failure modes of existing frameworks, and non-negotiable guarantees.
+* **[Part 0: Why Customer Support Is Where Agent Frameworks Break](/blog/00-novagear-problem-context)** — The NovaGear scenario, failure modes of existing frameworks, and non-negotiable guarantees.
 * **[Part 1: Why We Skipped LangChain](/blog/01-why-we-skipped-langchain)** — Core invariants, alternating turns, and unified provider abstraction.
 * **[Part 2: Building the Runtime](/blog/02-building-runtime-and-tool-engine)** — Type-safe tool registries, schema reflection, and ReAct loops.
 * **[Part 3: Zero-Trust AI](/blog/03-zero-trust-ai-auth-middleware)** — IDOR prevention and step-up OTP security gates.

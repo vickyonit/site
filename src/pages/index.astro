@@ -6,13 +6,16 @@ import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
 import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
+import { getSeriesPosts } from "@lib/series";
 
 const allBlog = (await getCollection("blog")).filter(post => !post.data.draft);
+const seriesPosts = getSeriesPosts(allBlog, "customer-support-custom-runtime");
+
 const featured = allBlog
   .filter(post => post.data.featured)
   .sort((a, b) => a.data.featured! - b.data.featured!);
 const blog = allBlog
-  .filter(post => !post.data.featured)
+  .filter(post => !post.data.featured && !post.data.series)
   .sort((a, b) => (b.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) - (a.data.date?.valueOf() ?? Number.MAX_SAFE_INTEGER) || b.slug.localeCompare(a.slug))
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
@@ -61,6 +64,34 @@ const work = await Promise.all(
           </p>
         </article>
       </section>
+
+      {seriesPosts.length > 0 && (
+        <section class="animate space-y-6">
+          <div class="flex flex-wrap gap-y-2 items-center justify-between">
+            <div>
+              <div class="text-xs uppercase tracking-wider font-semibold text-black/50 dark:text-white/50 mb-1">
+                Series &bull; {seriesPosts.length} Parts
+              </div>
+              <h2 class="font-semibold text-black dark:text-white text-lg">
+                Building a customer support agent with a custom runtime
+              </h2>
+            </div>
+            <Link href="/blog/series/customer-support-custom-runtime">
+              Overview &rarr;
+            </Link>
+          </div>
+          <p class="text-sm text-black/70 dark:text-white/70 max-w-xl leading-relaxed">
+            An architectural walkthrough on building a production customer support agent from scratch in pure Python—no LangChain, no framework black boxes. Why off-the-shelf runtimes break under real customer traffic, and how to build one with strict turn invariants, zero-trust security gates, and OpenTelemetry tracing.
+          </p>
+          <ul class="flex flex-col gap-3">
+            {seriesPosts.map(post => (
+              <li>
+                <ArrowCard entry={post} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {featured.length > 0 && (
         <section class="animate space-y-6">
