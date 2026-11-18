@@ -1,0 +1,31 @@
+---
+interface Props {
+  measurementId?: string;
+}
+
+const { measurementId = "G-5741CBC8ZB" } = Astro.props;
+---
+
+<!-- Google Analytics 4 (GA4) with Astro ViewTransitions Support -->
+<script
+  is:inline
+  async
+  src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+></script>
+<script is:inline define:vars={{ measurementId }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", measurementId, {
+    send_page_view: false,
+  });
+
+  document.addEventListener("astro:page-load", () => {
+    gtag("event", "page_view", {
+      page_location: window.location.href,
+      page_title: document.title,
+    });
+  });
+</script>
