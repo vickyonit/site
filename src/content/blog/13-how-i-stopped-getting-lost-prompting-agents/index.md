@@ -24,16 +24,23 @@ Once the chaos is out of my head, I organize it. Sometimes I group it myself. Ot
 
 Letting the agent do the heavy lifting of structuring frees up your cognitive energy to judge whether the plan actually makes sense.
 
-## The four question filter
+## The prompt skeleton
 
-When I write the final instruction, I filter it through four simple questions:
+When turning those raw thoughts into an instruction, I use a simple four part skeleton. It answers four specific questions in order:
 
-1. Where are we? Point to the exact files and context.
-2. What is the single goal right now? One clear outcome.
-3. What should we avoid? Explicit boundaries on what not to touch or change.
-4. How do we verify it? The exact command, test, or visual check that proves success.
+1. Context: Where are we in the project? Mention the exact files, routes, or current state.
+2. Goal: What is the exact outcome? State the single objective in one or two clear sentences.
+3. Constraints: What are the guardrails? Name what the agent must not touch, alter, or overcomplicate.
+4. Verification: How do we prove it worked? Give the exact test, command, or visual check.
 
-If I notice myself drifting into side topics while typing, I ask: which of these four questions does this sentence answer? If it does not fit, it does not belong in this prompt.
+Having this skeleton in mind acts as an anchor. When you type:
+
+Context: We have an existing authentication flow in src/auth/login.tsx using Supabase.
+Goal: Add a Google sign in button below the email form.
+Constraints: Do not change the existing email password logic. Use our existing Button component from the UI library.
+Verification: Run npm test auth and check that types build with zero errors.
+
+If you ever feel lost while typing, you simply ask yourself which of those four slots you are describing. If a thought does not fit into one of them, it does not belong in this prompt.
 
 ## Turn the table and let the agent interview you
 
@@ -53,4 +60,4 @@ I now force myself to work in thin vertical slices. First the data model and typ
 
 If a stray thought about the interface crosses my mind while working on the database, I do not shove it into the current prompt. I write it down in a quick scratch file so my mind feels safe letting it go, then return to the single thread at hand.
 
-The goal is not to stop having associative thoughts. The goal is simply to stop dumping them all onto the agent at the exact same time.
+The goal is not to stop having associative thoughts. The goal is simply to stop dumping all of them onto the agent at the exact same time.
