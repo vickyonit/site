@@ -42,6 +42,16 @@ Verification: Run npm test auth and check that types build with zero errors.
 
 If you ever feel lost while typing, you simply ask yourself which of those four slots you are describing. If a thought does not fit into one of them, it does not belong in this prompt.
 
+## Why this matters even more for software factories
+
+With everyone talking about autonomous software factories, agent swarms, and background pipelines, hand crafting prompts can feel like an old practice. 
+
+The reality is the opposite. 
+
+An assembly line amplifies whatever you feed into it. If you feed high tolerance specifications into a software factory, you get working software. If you feed scattered thoughts and vague vibes into a multi agent swarm, you get broken code at factory scale.
+
+The prompt skeleton does not disappear in a software factory. It moves upstream into your issue tickets, design docs, and acceptance tests. Learning to structure your thoughts into context, goal, constraints, and verification is the exact skill required to direct an autonomous pipeline.
+
 ## Turn the table and let the agent interview you
 
 You do not need to arrive with every single requirement worked out in advance. 
