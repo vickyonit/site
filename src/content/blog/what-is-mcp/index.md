@@ -98,6 +98,8 @@ As soon as your assistant tried to handle normal daily work, four practical prob
 
 MCP v2 keeps the same shared language from v1 and adds the four everyday habits that turn a basic tool connection into a reliable working relationship.
 
+*Note: While I'm grouping these four capabilities as "MCP v2" for clarity, Anthropic is rolling them out iteratively, marking MCP's second anniversary by shipping Tasks and Elicitation to General Availability, launching Skills over MCP in public beta, and previewing direct File Uploads.*
+
 ### 1. Pocket checklists instead of the whole handbook (Skills)
 
 In MCP v2, each system can keep short checklists alongside its tools.
@@ -120,7 +122,7 @@ Right before that $4,500 wholesale refund leaves your account, the accounting se
 
 Instead of making the AI read megabytes of CSV rows or PDF pages inside the chat window, **File Uploads** let the client send files directly to the server.
 
-You drop the 15 MB carrier bill into the chat, the file goes straight to the accounting server built to parse spreadsheets, and your assistant receives only the short summary it needs: *"Found 3 overcharged shipments totaling $412."*
+You drop the 15 MB carrier bill into the chat, the file goes straight to the accounting server built to parse spreadsheets, and your assistant receives only the short summary it needs: *"Found 3 overcharged shipments totaling $4,500."*
 
 ### All four habits in one workflow
 
